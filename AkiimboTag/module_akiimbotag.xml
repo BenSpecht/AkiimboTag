@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_akiimbotag" default="compile.module.akiimbotag">
+  <dirname property="module.akiimbotag.basedir" file="${ant.file.module_akiimbotag}"/>
+  
+  <property name="module.jdk.home.akiimbotag" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.akiimbotag" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.akiimbotag" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.akiimbotag" value="-encoding UTF-8 -source 10 -target 10 ${compiler.args}"/>
+  
+  <property name="akiimbotag.output.dir" value="${module.akiimbotag.basedir}/out/production/AkiimboTag"/>
+  <property name="akiimbotag.testoutput.dir" value="${module.akiimbotag.basedir}/out/test/AkiimboTag"/>
+  
+  <path id="akiimbotag.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="akiimbotag.module.production.classpath">
+    <path refid="${module.jdk.classpath.akiimbotag}"/>
+    <path refid="library.spigot-1.16.2.classpath"/>
+  </path>
+  
+  <path id="akiimbotag.runtime.production.module.classpath">
+    <pathelement location="${akiimbotag.output.dir}"/>
+    <path refid="library.spigot-1.16.2.classpath"/>
+  </path>
+  
+  <path id="akiimbotag.module.classpath">
+    <path refid="${module.jdk.classpath.akiimbotag}"/>
+    <pathelement location="${akiimbotag.output.dir}"/>
+    <path refid="library.spigot-1.16.2.classpath"/>
+  </path>
+  
+  <path id="akiimbotag.runtime.module.classpath">
+    <pathelement location="${akiimbotag.testoutput.dir}"/>
+    <pathelement location="${akiimbotag.output.dir}"/>
+    <path refid="library.spigot-1.16.2.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.akiimbotag">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.akiimbotag">
+    <patternset refid="excluded.from.module.akiimbotag"/>
+  </patternset>
+  
+  <path id="akiimbotag.module.sourcepath">
+    <dirset dir="${module.akiimbotag.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.akiimbotag" depends="compile.module.akiimbotag.production,compile.module.akiimbotag.tests" description="Compile module AkiimboTag"/>
+  
+  <target name="compile.module.akiimbotag.production" depends="register.custom.compilers" description="Compile module AkiimboTag; production classes">
+    <mkdir dir="${akiimbotag.output.dir}"/>
+    <javac2 destdir="${akiimbotag.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.akiimbotag}/javac">
+      <compilerarg line="${compiler.args.akiimbotag}"/>
+      <bootclasspath refid="akiimbotag.module.bootclasspath"/>
+      <classpath refid="akiimbotag.module.production.classpath"/>
+      <src refid="akiimbotag.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.akiimbotag"/>
+    </javac2>
+    
+    <copy todir="${akiimbotag.output.dir}">
+      <fileset dir="${module.akiimbotag.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.akiimbotag.tests" depends="register.custom.compilers,compile.module.akiimbotag.production" description="compile module AkiimboTag; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.akiimbotag" description="cleanup module">
+    <delete dir="${akiimbotag.output.dir}"/>
+    <delete dir="${akiimbotag.testoutput.dir}"/>
+  </target>
+</project>
